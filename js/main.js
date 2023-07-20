@@ -85,11 +85,13 @@ let productos = [
   }
 ]
 
+let cardBootstrap
 let productosCards = document.querySelector(".productosCards")
+let carrito = []
 
 for (let i = 0; i < productos.length; i++) {
     let carrito = productos[i]
-    let cardBootstrap = `<div class="card" style="width: 18rem;">
+    cardBootstrap += `<div class="card" style="width: 18rem;">
     <img src="${carrito.imagen}" class="card-img-top" alt="proteina-star">
     <div class="card-body">
         <h5 class="card-title">${carrito.nombreproducto}</h5>
@@ -98,8 +100,35 @@ for (let i = 0; i < productos.length; i++) {
     <ul class="list-group list-group-flush">
         <li class="list-group-item">$${carrito.precio.toFixed(0)}</li>
         <li class="list-group-item">${carrito.contenidoNeto}</li>
-        <li class="list-group-item">${carrito.servicios}</li>
+        <button type="button" class="btn btn-outline-dark" data-producto-id="1">Añadir al carrito</button>
     </ul>`;
+    productosCards.innerHTML += cardBootstrap
+  }
+
+let agregarBoton = document.getElementsByClassName("btn-outline-dark");
+
+for (let i = 0; i < agregarBoton.length; i++) {
+  let button = agregarBoton[i]
+  button.addEventListener("click", agregarCarrito)
 }
 
-productosCards.innerHTML += cardBootstrap
+function agregarCarrito(event){
+  let button = event.target
+  
+  let productoId = button.getAttribute("data-producto-id")
+  
+  let producto = productos.find((producto) => producto.id == parseInt(productoId))
+  
+  let productoEnCarrito = carrito.find((item) => item.id == producto.id)
+  
+  if (!productoEnCarrito) {
+    carrito.push({ ...producto, cantidad: 1 });
+  }
+    else{
+      productoEnCarrito.cantidad += 1;
+
+    }
+  
+    console.log("Producto agregado al carrito. ID: " + productoId);
+    console.log("Carrito:", carrito);
+}
